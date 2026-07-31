@@ -1,0 +1,1 @@
+# One symbol per line, e.g. AAPL or BRK.B
