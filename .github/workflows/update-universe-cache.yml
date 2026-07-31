@@ -1,0 +1,202 @@
+name: update-universe-cache
+
+on:
+  workflow_dispatch:
+    inputs:
+      force_refresh:
+        description: '強制重跑完整月更（忽略 fresh cache 跳過機制）'
+        required: false
+        default: false
+        type: boolean
+      shard_count:
+        description: 'Matrix shard 數量（建議 4-8）'
+        required: false
+        default: '4'
+        type: string
+      max_parallel:
+        description: 'Matrix 最大並行數（建議 2-4）'
+        required: false
+        default: '4'
+        type: string
+  schedule:
+    - cron: '0 2 1 * *'
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.prepare.outputs.should_run }}
+      matrix: ${{ steps.prepare.outputs.matrix }}
+      status: ${{ steps.prepare.outputs.status }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Prepare monthly universe workspace
+        id: prepare
+        shell: bash
+        run: |
+          set -euo pipefail
+          WORKSPACE_DIR=".tmp/universe_update"
+          FORCE_FLAG=""
+          SHARD_COUNT="${{ github.event.inputs.shard_count || '4' }}"
+          if [[ "${{ inputs.force_refresh || false }}" == "true" ]]; then
+            FORCE_FLAG="--force-refresh"
+          fi
+          python scripts/update_symbol_universe.py \
+            --mode prepare \
+            --workspace-dir "$WORKSPACE_DIR" \
+            --skip-if-fresh-days 25 \
+            --shard-count "$SHARD_COUNT" \
+            ${FORCE_FLAG}
+          python - <<'PY'
+          import json, os
+          payload = json.load(open('.tmp/universe_update/prepare.json', 'r', encoding='utf-8'))
+          should_run = 'true' if payload.get('status') == 'prepared' else 'false'
+          matrix = json.dumps(payload.get('matrix', []), separators=(',', ':'))
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
+              f.write(f'should_run={should_run}\n')
+              f.write(f'matrix={matrix}\n')
+              f.write(f"status={payload.get('status', '')}\n")
+          print(json.dumps(payload, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Upload prepare workspace
+        if: ${{ steps.prepare.outputs.should_run == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: monthly-universe-prepare
+          path: .tmp/universe_update
+          retention-days: 7
+
+  update-shards:
+    needs: prepare
+    if: ${{ needs.prepare.outputs.should_run == 'true' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: ${{ fromJson(github.event.inputs.max_parallel || '4') }}
+      matrix:
+        include: ${{ fromJson(needs.prepare.outputs.matrix) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Download prepare workspace
+        uses: actions/download-artifact@v4
+        with:
+          name: monthly-universe-prepare
+          path: .tmp/universe_update
+
+      - name: Run shard updater
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/update_symbol_universe.py \
+            --mode shard \
+            --workspace-dir .tmp/universe_update \
+            --shard-index ${{ matrix.shard_index }}
+
+      - name: Upload shard result
+        uses: actions/upload-artifact@v4
+        with:
+          name: monthly-universe-shard-${{ matrix.shard_index }}
+          path: .tmp/universe_update/results
+          retention-days: 7
+
+  aggregate:
+    needs: [prepare, update-shards]
+    if: ${{ needs.prepare.outputs.should_run == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Download prepare workspace
+        uses: actions/download-artifact@v4
+        with:
+          name: monthly-universe-prepare
+          path: .tmp/universe_update
+
+      - name: Download shard results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: monthly-universe-shard-*
+          merge-multiple: true
+          path: .tmp/universe_update/results
+
+      - name: Aggregate monthly exclusions
+        run: |
+          python scripts/update_symbol_universe.py \
+            --mode aggregate \
+            --workspace-dir .tmp/universe_update
+
+      - name: Commit and push if changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          BRANCH="${GITHUB_REF_NAME:-main}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/universe config/exclude_symbols.txt
+          if git diff --cached --quiet; then
+            echo 'No universe cache changes to commit.'
+            exit 0
+          fi
+          git commit -m "chore: update monthly US symbol universe and exclusions"
+          for attempt in 1 2 3; do
+            echo "Push attempt ${attempt} to ${BRANCH}"
+            git fetch origin "${BRANCH}"
+            if git rebase "origin/${BRANCH}"; then
+              if git push origin "HEAD:${BRANCH}"; then
+                echo 'Push succeeded.'
+                exit 0
+              fi
+            fi
+            echo 'Push failed; retrying after abort/reset.'
+            git rebase --abort || true
+            git reset --hard HEAD
+            sleep 3
+          done
+          echo 'Failed to push updated US universe cache after 3 attempts.' >&2
+          exit 1
