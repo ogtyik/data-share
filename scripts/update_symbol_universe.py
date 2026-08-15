@@ -38,6 +38,10 @@ REQUIRED_CACHE_FILES = (
     'manifest.json',
 )
 
+# 新增：市值与股价过滤阈值（可在此调整）
+MIN_MARKET_CAP_USD = 3_000_000_000   # 30亿美元
+MIN_PRICE_USD = 12.0                 # 12美元
+
 
 def now_utc() -> datetime:
     return datetime.now(timezone.utc)
@@ -103,6 +107,7 @@ def cache_is_fresh(out_dir: Path, *, skip_if_fresh_days: float) -> tuple[bool, s
 
 
 def build_universe_frame(nasdaq_text: str, other_text: str) -> pd.DataFrame:
+    """构建初始普通股宇宙（不含任何市值/价格/流动性过滤）"""
     nasdaq = base.parse_nasdaq_listed(nasdaq_text)
     other = base.parse_other_listed(other_text)
     uni = pd.concat([nasdaq, other], ignore_index=True)
@@ -114,43 +119,51 @@ def build_universe_frame(nasdaq_text: str, other_text: str) -> pd.DataFrame:
     return uni[['Symbol', 'yahoo_symbol', 'name', 'etf', 'test_issue', 'source']]
 
 
-def filter_by_market_cap_and_price(
-    df: pd.DataFrame,
-    log_path: Path,
-    min_market_cap: float = 3_000_000_000,
-    min_price: float = 12.0,
-    batch_delay: float = 0.2
-) -> pd.DataFrame:
+def filter_by_market_cap_and_price_shard(df: pd.DataFrame, log_file: Path) -> pd.DataFrame:
     """
-    过滤掉市值低于 min_market_cap 或股价低于 min_price 的股票。
+    在分片内过滤市值和股价，使用 yf.Tickers 批量获取信息。
+    只保留 市值 ≥ MIN_MARKET_CAP_USD 且 股价 ≥ MIN_PRICE_USD 的股票。
     """
-    filtered_symbols = []
-    log_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(log_path, 'a', encoding='utf-8') as log:
-        log.write(f"[{now_utc().isoformat()}] Starting market cap & price filter\n")
-        for i, row in df.iterrows():
-            sym = row['Symbol']
-            yahoo_sym = base.yahoo_symbol(sym)
+    if df.empty:
+        return df
+    symbols = df['Symbol'].tolist()
+    yahoo_symbols = [base.yahoo_symbol(s) for s in symbols]
+    keep_symbols = []
+    batch_size = 50  # 每批请求数量，避免超时
+    log_file.parent.mkdir(parents=True, exist_ok=True)
+    with open(log_file, 'a', encoding='utf-8') as log:
+        log.write(f"[{now_utc().isoformat()}] Shard filter: checking {len(symbols)} symbols\n")
+        for i in range(0, len(yahoo_symbols), batch_size):
+            batch = yahoo_symbols[i:i+batch_size]
             try:
-                ticker = yf.Ticker(yahoo_sym)
-                info = ticker.info
-                market_cap = info.get('marketCap')
-                current_price = info.get('regularMarketPrice') or info.get('currentPrice') or info.get('previousClose')
-                if market_cap is not None and current_price is not None:
-                    if market_cap >= min_market_cap and current_price >= min_price:
-                        filtered_symbols.append(sym)
-                    else:
-                        log.write(f"FILTER_OUT {sym} | marketCap={market_cap} | price={current_price}\n")
-                else:
-                    log.write(f"INFO_MISSING {sym} | marketCap={market_cap} | price={current_price}\n")
+                tickers = yf.Tickers(' '.join(batch))
             except Exception as e:
-                log.write(f"INFO_ERROR {sym} | {e}\n")
-            if (i + 1) % 50 == 0:
-                time.sleep(batch_delay)
-    return df[df['Symbol'].isin(filtered_symbols)].copy()
+                log.write(f"ERROR creating Tickers for batch: {e}\n")
+                continue
+            for ys in batch:
+                orig_sym = df[df['yahoo_symbol'] == ys]['Symbol'].iloc[0] if len(df[df['yahoo_symbol'] == ys]) > 0 else ys
+                try:
+                    info = tickers.tickers[ys].info
+                    market_cap = info.get('marketCap')
+                    price = info.get('regularMarketPrice') or info.get('currentPrice') or info.get('previousClose')
+                    if market_cap is not None and price is not None:
+                        if market_cap >= MIN_MARKET_CAP_USD and price >= MIN_PRICE_USD:
+                            keep_symbols.append(orig_sym)
+                        else:
+                            log.write(f"FILTER_OUT {orig_sym} | marketCap={market_cap} | price={price}\n")
+                    else:
+                        log.write(f"INFO_MISSING {orig_sym} | marketCap={market_cap} | price={price}\n")
+                except Exception as e:
+                    log.write(f"INFO_ERROR {orig_sym} | {e}\n")
+            time.sleep(0.1)  # 避免限流
+    return df[df['Symbol'].isin(keep_symbols)].copy()
 
 
 def build_exclusion_rows(df: pd.DataFrame, *, stderr_path: str, period: str, batch: int, phase: str):
+    """
+    下载历史K线，计算30日平均成交额，生成流动性排除列表。
+    注意：传入的 df 已通过市值/股价过滤。
+    """
     symbols = df['Symbol'].astype(str).tolist()
     mapped = {base.yahoo_symbol(sym): sym for sym in symbols}
     yahoo_symbols = list(mapped.keys())
@@ -217,6 +230,7 @@ def write_json(path: Path, payload: dict | list) -> None:
 
 
 def write_shard_frames(df: pd.DataFrame, workspace_dir: Path, shard_count: int) -> list[dict]:
+    """将 DataFrame 拆分为多个分片 CSV 文件（仅包含原始宇宙，无过滤）"""
     shard_count = max(1, int(shard_count))
     symbols = df['Symbol'].astype(str).tolist()
     shard_symbol_lists = base.split_into_shards(symbols, shard_count)
@@ -238,6 +252,12 @@ def write_shard_frames(df: pd.DataFrame, workspace_dir: Path, shard_count: int) 
 
 
 def run_prepare(args) -> dict:
+    """
+    Prepare 阶段现在只做三件事：
+    1. 检查缓存新鲜度（跳过可复用）
+    2. 从 Nasdaq 实时抓取并解析普通股
+    3. 将全量普通股列表分片（不进行任何市值/股价/流动性过滤）
+    """
     root = ROOT
     out_dir = root / 'data' / 'universe'
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -245,7 +265,7 @@ def run_prepare(args) -> dict:
     workspace_dir.mkdir(parents=True, exist_ok=True)
     ensure_manual_exclusion_file(root)
 
-    # ---- 检查缓存是否新鲜 ----
+    # 缓存新鲜度检查
     if not args.force_refresh:
         fresh, reason = cache_is_fresh(out_dir, skip_if_fresh_days=args.skip_if_fresh_days)
         if fresh:
@@ -261,7 +281,7 @@ def run_prepare(args) -> dict:
             write_json(workspace_dir / 'prepare.json', payload)
             return payload
 
-    # ---- 实时抓取 Nasdaq 数据 ----
+    # 抓取 Nasdaq 数据
     source_dir = workspace_dir / 'source'
     source_dir.mkdir(parents=True, exist_ok=True)
     nasdaq_text = fetch_text(NASDAQ_LISTED_URL)
@@ -269,22 +289,17 @@ def run_prepare(args) -> dict:
     (source_dir / 'nasdaqlisted.txt').write_text(nasdaq_text, encoding='utf-8')
     (source_dir / 'otherlisted.txt').write_text(other_text, encoding='utf-8')
 
-    # ---- 构建初始宇宙 ----
+    # 构建初始宇宙（仅过滤非普通股，不含市值/股价/流动性）
     df = build_universe_frame(nasdaq_text, other_text)
 
-    # ---- 新增：市值与股价过滤 ----
-    filter_log = workspace_dir / 'filter.log'
-    df = filter_by_market_cap_and_price(df, filter_log)
-    if df.empty:
-        raise RuntimeError("After market cap & price filter, no symbols remain.")
-
-    # ---- 可选截断（测试用） ----
     if args.max_symbols and args.max_symbols > 0:
         df = df.head(args.max_symbols).copy()
 
-    # ---- 保存宇宙及分片 ----
+    # 保存初始宇宙
     us_symbols_csv = source_dir / 'us_symbols.csv'
     df.to_csv(us_symbols_csv, index=False, encoding='utf-8')
+
+    # 生成分片（未经任何过滤）
     shards_meta = write_shard_frames(df, workspace_dir, args.shard_count)
 
     payload = {
@@ -311,13 +326,65 @@ def run_prepare(args) -> dict:
 
 
 def run_shard(args) -> dict:
+    """
+    Shard 阶段在分片内并行执行：
+    1. 市值过滤（≥30亿美元）
+    2. 股价过滤（≥12美元）
+    3. 流动性过滤（30日平均成交额≥1500万美元）
+    """
     workspace_dir = workspace_dir_from_arg(args.workspace_dir)
     prepare_payload = json.loads((workspace_dir / 'prepare.json').read_text(encoding='utf-8'))
     shard_index = int(args.shard_index)
     shard_path = workspace_dir / 'shards' / f'shard_{shard_index:02d}.csv'
     if not shard_path.exists():
         raise FileNotFoundError(f'shard file not found: {shard_path}')
+
+    # 读取本分片的原始股票列表
     df = pd.read_csv(shard_path)
+    if df.empty:
+        # 空分片直接返回空结果
+        payload = {
+            'status': 'completed',
+            'generated_at_utc': now_utc().isoformat(),
+            'shard_index': shard_index,
+            'symbols': 0,
+            'period': args.period or prepare_payload['period'],
+            'batch': int(args.batch or prepare_payload['batch']),
+            'generated_symbols': [],
+            'smallcap_symbols': [],
+            'missing_symbols': [],
+            'rows': [],
+            'stderr_file': '',
+        }
+        results_dir = workspace_dir / 'results'
+        results_dir.mkdir(parents=True, exist_ok=True)
+        write_json(results_dir / f'shard_{shard_index:02d}.json', payload)
+        return payload
+
+    # ---- 第一步：市值与股价过滤 ----
+    filter_log = workspace_dir / f'filter_shard_{shard_index:02d}.log'
+    df = filter_by_market_cap_and_price_shard(df, filter_log)
+    if df.empty:
+        # 该分片无股票通过市值/股价过滤，直接返回空结果
+        payload = {
+            'status': 'completed',
+            'generated_at_utc': now_utc().isoformat(),
+            'shard_index': shard_index,
+            'symbols': 0,
+            'period': args.period or prepare_payload['period'],
+            'batch': int(args.batch or prepare_payload['batch']),
+            'generated_symbols': [],
+            'smallcap_symbols': [],
+            'missing_symbols': [],
+            'rows': [],
+            'stderr_file': str(filter_log.relative_to(workspace_dir)),
+        }
+        results_dir = workspace_dir / 'results'
+        results_dir.mkdir(parents=True, exist_ok=True)
+        write_json(results_dir / f'shard_{shard_index:02d}.json', payload)
+        return payload
+
+    # ---- 第二步：流动性过滤（下载K线，计算30日成交额） ----
     results_dir = workspace_dir / 'results'
     results_dir.mkdir(parents=True, exist_ok=True)
     stderr_path = results_dir / f'shard_{shard_index:02d}.stderr.log'
@@ -331,6 +398,7 @@ def run_shard(args) -> dict:
         batch=int(args.batch or prepare_payload['batch']),
         phase=f'MONTHLY_EXCLUSION_SHARD_{shard_index:02d}',
     )
+
     payload = {
         'status': 'completed',
         'generated_at_utc': now_utc().isoformat(),
@@ -343,6 +411,7 @@ def run_shard(args) -> dict:
         'missing_symbols': missing_symbols,
         'rows': rows,
         'stderr_file': str(stderr_path.relative_to(workspace_dir)),
+        'filter_log': str(filter_log.relative_to(workspace_dir)),
     }
     write_json(results_dir / f'shard_{shard_index:02d}.json', payload)
     pd.DataFrame(rows).to_csv(results_dir / f'shard_{shard_index:02d}.csv', index=False, encoding='utf-8')
@@ -360,6 +429,8 @@ def build_manifest(*, out_dir: Path, nasdaq_text: str, other_text: str, us_symbo
         'rules': {
             'universe_filter': 'Nasdaq Trader regular securities + Yahoo-friendly filter',
             'pre_scan_generated_exclusions': '30日平均成交額 < 1500萬美元，或 Yahoo 對不到 / 可能已退市 / 未上市代號',
+            'market_cap_threshold_usd': MIN_MARKET_CAP_USD,
+            'price_threshold_usd': MIN_PRICE_USD,
         },
         'counts': {
             'symbols': int(pd.read_csv(us_symbols_csv).shape[0]),
@@ -398,6 +469,7 @@ def build_manifest(*, out_dir: Path, nasdaq_text: str, other_text: str, us_symbo
 
 
 def run_aggregate(args) -> dict:
+    """汇总所有分片结果，生成最终的排除列表和缓存文件"""
     root = ROOT
     out_dir = root / 'data' / 'universe'
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -449,6 +521,8 @@ def run_aggregate(args) -> dict:
             'smallcap_avg_dollar_volume_30d_usd': SMALLCAP_AVG_DOLLAR_VOLUME_30D_USD,
             'market_data_period': args.period or prepare_payload['period'],
             'market_data_batch': int(args.batch or prepare_payload['batch']),
+            'min_market_cap_usd': MIN_MARKET_CAP_USD,
+            'min_price_usd': MIN_PRICE_USD,
         },
         'counts': {
             'symbols': int(pd.read_csv(us_symbols_csv).shape[0]),
