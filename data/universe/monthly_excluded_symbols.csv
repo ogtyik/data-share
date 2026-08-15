@@ -1,5 +1,6 @@
 symbol,yahoo_symbol,name,reason,avg_dollar_volume_30d_usd,valid_days
-BATRA,BATRA,"Atlanta Braves Holdings, Inc. - Series A Common Stock",avg_dollar_volume_30d_below_15m_usd,3563090.98,42
-CHRN,CHRN,ChronoScale Holdings Corporation - Common Stock,avg_dollar_volume_30d_below_15m_usd,6726198.84,41
+BATRA,BATRA,"Atlanta Braves Holdings, Inc. - Series A Common Stock",avg_dollar_volume_30d_below_15m_usd,3501660.15,43
+CHRN,CHRN,ChronoScale Holdings Corporation - Common Stock,avg_dollar_volume_30d_below_15m_usd,6111422.17,43
 CRVL,CRVL,CorVel Corp. - Common Stock,avg_dollar_volume_30d_below_15m_usd,10809844.29,43
 DOO,DOO,BRP Inc. - Common Subordinate Voting Shares,avg_dollar_volume_30d_below_15m_usd,12414698.37,43
+FWONA,FWONA,Liberty Media Corporation - Series A Liberty Formula One Common Stock,avg_dollar_volume_30d_below_15m_usd,14834888.71,43

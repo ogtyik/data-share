@@ -1,5 +1,5 @@
 {
-  "updated_at_utc": "2026-08-15T07:30:37.866321+00:00",
+  "updated_at_utc": "2026-08-15T08:36:44.027189+00:00",
   "sources": {
     "nasdaqlisted": "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
     "otherlisted": "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
@@ -10,9 +10,9 @@
     "pre_scan_generated_exclusions": "30日平均成交額 < 1500萬美元，或 Yahoo 對不到 / 可能已退市 / 未上市代號"
   },
   "counts": {
-    "symbols": 168,
-    "generated_exclusions": 4,
-    "smallcap_symbols": 4,
+    "symbols": 254,
+    "generated_exclusions": 5,
+    "smallcap_symbols": 5,
     "missing_symbols": 0
   },
   "updater": {
@@ -23,26 +23,26 @@
     "shards": [
       {
         "shard_index": 1,
-        "symbols": 42,
-        "generated_symbols": 0,
+        "symbols": 64,
+        "generated_symbols": 1,
         "missing_symbols": 0
       },
       {
         "shard_index": 2,
-        "symbols": 42,
+        "symbols": 64,
         "generated_symbols": 1,
         "missing_symbols": 0
       },
       {
         "shard_index": 3,
-        "symbols": 42,
-        "generated_symbols": 1,
+        "symbols": 63,
+        "generated_symbols": 2,
         "missing_symbols": 0
       },
       {
         "shard_index": 4,
-        "symbols": 42,
-        "generated_symbols": 2,
+        "symbols": 63,
+        "generated_symbols": 1,
         "missing_symbols": 0
       }
     ]
@@ -57,20 +57,20 @@
       "bytes": 528083
     },
     "us_symbols.csv": {
-      "sha256": "eac2fb07c6db1f6eae6af0b295c9371e408abd62f590ff5e66943a25995c60ae",
-      "bytes": 11663
+      "sha256": "25dd389a32b9d84ba479a1dfd45c908f4d6a41885377ad5eb63b33c33702dd6f",
+      "bytes": 17519
     },
     "monthly_excluded_symbols.json": {
-      "sha256": "43ede5bd342147b90a65711b85333f5e788dde0817267ddf573b26ee1e5471f2",
-      "bytes": 1547
+      "sha256": "663555f140f91828d17683abdf48e495dce72d70119c8dfeffe601ada99be09a",
+      "bytes": 1855
     },
     "monthly_excluded_symbols.csv": {
-      "sha256": "3982339c49b3e035d8089b5262b6caa14d1a14127ba67445177df267f8aac5c6",
-      "bytes": 487
+      "sha256": "8769c934561306c4c758d68c7ead91afe84dda56ad0663385755e9fb6586edab",
+      "bytes": 620
     },
     "monthly_excluded_symbols.txt": {
-      "sha256": "4d403b91277adbd019b1e1c63bd7e59f4668da57b6e1e3393a542e885deb0d23",
-      "bytes": 20
+      "sha256": "e16078257cec5080f1865598bd9f21df40aed16cc09346b650fcb58e154b0b89",
+      "bytes": 26
     }
   }
 }

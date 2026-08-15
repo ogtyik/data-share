@@ -1,28 +1,30 @@
 {
-  "updated_at_utc": "2026-08-15T07:30:37.862274+00:00",
+  "updated_at_utc": "2026-08-15T08:36:44.023522+00:00",
   "thresholds": {
     "smallcap_avg_dollar_volume_30d_usd": 15000000,
     "market_data_period": "2mo",
     "market_data_batch": 80
   },
   "counts": {
-    "symbols": 168,
-    "smallcap_symbols": 4,
+    "symbols": 254,
+    "smallcap_symbols": 5,
     "missing_symbols": 0,
-    "generated_symbols": 4,
+    "generated_symbols": 5,
     "manual_exclusions": 0
   },
   "generated_symbols": [
     "BATRA",
     "CHRN",
     "CRVL",
-    "DOO"
+    "DOO",
+    "FWONA"
   ],
   "smallcap_symbols": [
     "BATRA",
     "CHRN",
     "CRVL",
-    "DOO"
+    "DOO",
+    "FWONA"
   ],
   "missing_symbols": [],
   "rows": [
@@ -31,16 +33,16 @@
       "yahoo_symbol": "BATRA",
       "name": "Atlanta Braves Holdings, Inc. - Series A Common Stock",
       "reason": "avg_dollar_volume_30d_below_15m_usd",
-      "avg_dollar_volume_30d_usd": 3563090.98,
-      "valid_days": 42
+      "avg_dollar_volume_30d_usd": 3501660.15,
+      "valid_days": 43
     },
     {
       "symbol": "CHRN",
       "yahoo_symbol": "CHRN",
       "name": "ChronoScale Holdings Corporation - Common Stock",
       "reason": "avg_dollar_volume_30d_below_15m_usd",
-      "avg_dollar_volume_30d_usd": 6726198.84,
-      "valid_days": 41
+      "avg_dollar_volume_30d_usd": 6111422.17,
+      "valid_days": 43
     },
     {
       "symbol": "CRVL",
@@ -56,6 +58,14 @@
       "name": "BRP Inc. - Common Subordinate Voting Shares",
       "reason": "avg_dollar_volume_30d_below_15m_usd",
       "avg_dollar_volume_30d_usd": 12414698.37,
+      "valid_days": 43
+    },
+    {
+      "symbol": "FWONA",
+      "yahoo_symbol": "FWONA",
+      "name": "Liberty Media Corporation - Series A Liberty Formula One Common Stock",
+      "reason": "avg_dollar_volume_30d_below_15m_usd",
+      "avg_dollar_volume_30d_usd": 14834888.71,
       "valid_days": 43
     }
   ]
