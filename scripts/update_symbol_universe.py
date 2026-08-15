@@ -5,11 +5,13 @@ import argparse
 import hashlib
 import json
 import sys
+import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 
 import pandas as pd
+import yfinance as yf
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -110,6 +112,43 @@ def build_universe_frame(nasdaq_text: str, other_text: str) -> pd.DataFrame:
     uni['Symbol'] = uni['Symbol'].map(lambda x: str(x).upper())
     uni['yahoo_symbol'] = uni['Symbol'].map(lambda x: base.yahoo_symbol(str(x)))
     return uni[['Symbol', 'yahoo_symbol', 'name', 'etf', 'test_issue', 'source']]
+
+
+def filter_by_market_cap_and_price(
+    df: pd.DataFrame,
+    log_path: Path,
+    min_market_cap: float = 3_000_000_000,
+    min_price: float = 12.0,
+    batch_delay: float = 0.2
+) -> pd.DataFrame:
+    """
+    过滤掉市值低于 min_market_cap 或股价低于 min_price 的股票。
+    """
+    filtered_symbols = []
+    total = len(df)
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(log_path, 'a', encoding='utf-8') as log:
+        log.write(f"[{now_utc().isoformat()}] Starting market cap & price filter\n")
+        for i, row in df.iterrows():
+            sym = row['Symbol']
+            yahoo_sym = base.yahoo_symbol(sym)
+            try:
+                ticker = yf.Ticker(yahoo_sym)
+                info = ticker.info
+                market_cap = info.get('marketCap')
+                current_price = info.get('regularMarketPrice') or info.get('currentPrice') or info.get('previousClose')
+                if market_cap is not None and current_price is not None:
+                    if market_cap >= min_market_cap and current_price >= min_price:
+                        filtered_symbols.append(sym)
+                    else:
+                        log.write(f"FILTER_OUT {sym} | marketCap={market_cap} | price={current_price}\n")
+                else:
+                    log.write(f"INFO_MISSING {sym} | marketCap={market_cap} | price={current_price}\n")
+            except Exception as e:
+                log.write(f"INFO_ERROR {sym} | {e}\n")
+            if (i + 1) % 50 == 0:
+                time.sleep(batch_delay)   # 避免请求过频
+    return df[df['Symbol'].isin(filtered_symbols)].copy()
 
 
 def build_exclusion_rows(df: pd.DataFrame, *, stderr_path: str, period: str, batch: int, phase: str):
@@ -245,6 +284,14 @@ def run_prepare(args) -> dict:
     (source_dir / 'otherlisted.txt').write_text(other_text, encoding='utf-8')
 
     df = build_universe_frame(nasdaq_text, other_text)
+
+    # ---------- 新增：市值与股价过滤 ----------
+    filter_log = workspace_dir / 'filter.log'
+    df = filter_by_market_cap_and_price(df, filter_log)
+    if df.empty:
+        raise RuntimeError("After market cap & price filter, no symbols remain.")
+    # -----------------------------------------
+
     if args.max_symbols and args.max_symbols > 0:
         df = df.head(args.max_symbols).copy()
 
