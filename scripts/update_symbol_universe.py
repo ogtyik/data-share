@@ -125,7 +125,6 @@ def filter_by_market_cap_and_price(
     过滤掉市值低于 min_market_cap 或股价低于 min_price 的股票。
     """
     filtered_symbols = []
-    total = len(df)
     log_path.parent.mkdir(parents=True, exist_ok=True)
     with open(log_path, 'a', encoding='utf-8') as log:
         log.write(f"[{now_utc().isoformat()}] Starting market cap & price filter\n")
@@ -147,7 +146,7 @@ def filter_by_market_cap_and_price(
             except Exception as e:
                 log.write(f"INFO_ERROR {sym} | {e}\n")
             if (i + 1) % 50 == 0:
-                time.sleep(batch_delay)   # 避免请求过频
+                time.sleep(batch_delay)
     return df[df['Symbol'].isin(filtered_symbols)].copy()
 
 
@@ -238,22 +237,6 @@ def write_shard_frames(df: pd.DataFrame, workspace_dir: Path, shard_count: int) 
     return shards_meta
 
 
-def create_prepare_payload(df: pd.DataFrame, workspace_dir: Path, *, period: str, batch: int, shard_count: int, skip_if_fresh_days: float, force_refresh: bool, status: str, reason: str = '') -> dict:
-    matrix = [{'shard_index': item['shard_index']} for item in sorted(json.loads((workspace_dir / 'prepare.json').read_text(encoding='utf-8')).get('shards', []), key=lambda x: x['shard_index'])] if (workspace_dir / 'prepare.json').exists() else []
-    return {
-        'status': status,
-        'reason': reason,
-        'symbols': int(len(df)),
-        'period': period,
-        'batch': int(batch),
-        'shard_count': int(shard_count),
-        'skip_if_fresh_days': skip_if_fresh_days,
-        'force_refresh': force_refresh,
-        'workspace_dir': str(workspace_dir),
-        'matrix': matrix,
-    }
-
-
 def run_prepare(args) -> dict:
     root = ROOT
     out_dir = root / 'data' / 'universe'
@@ -261,6 +244,8 @@ def run_prepare(args) -> dict:
     workspace_dir = workspace_dir_from_arg(args.workspace_dir)
     workspace_dir.mkdir(parents=True, exist_ok=True)
     ensure_manual_exclusion_file(root)
+
+    # ---- 检查缓存是否新鲜 ----
     if not args.force_refresh:
         fresh, reason = cache_is_fresh(out_dir, skip_if_fresh_days=args.skip_if_fresh_days)
         if fresh:
@@ -276,6 +261,7 @@ def run_prepare(args) -> dict:
             write_json(workspace_dir / 'prepare.json', payload)
             return payload
 
+    # ---- 实时抓取 Nasdaq 数据 ----
     source_dir = workspace_dir / 'source'
     source_dir.mkdir(parents=True, exist_ok=True)
     nasdaq_text = fetch_text(NASDAQ_LISTED_URL)
@@ -283,21 +269,24 @@ def run_prepare(args) -> dict:
     (source_dir / 'nasdaqlisted.txt').write_text(nasdaq_text, encoding='utf-8')
     (source_dir / 'otherlisted.txt').write_text(other_text, encoding='utf-8')
 
+    # ---- 构建初始宇宙 ----
     df = build_universe_frame(nasdaq_text, other_text)
 
-    # ---------- 新增：市值与股价过滤 ----------
+    # ---- 新增：市值与股价过滤 ----
     filter_log = workspace_dir / 'filter.log'
     df = filter_by_market_cap_and_price(df, filter_log)
     if df.empty:
         raise RuntimeError("After market cap & price filter, no symbols remain.")
-    # -----------------------------------------
 
+    # ---- 可选截断（测试用） ----
     if args.max_symbols and args.max_symbols > 0:
         df = df.head(args.max_symbols).copy()
 
+    # ---- 保存宇宙及分片 ----
     us_symbols_csv = source_dir / 'us_symbols.csv'
     df.to_csv(us_symbols_csv, index=False, encoding='utf-8')
     shards_meta = write_shard_frames(df, workspace_dir, args.shard_count)
+
     payload = {
         'status': 'prepared',
         'generated_at_utc': now_utc().isoformat(),
