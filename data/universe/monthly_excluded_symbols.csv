@@ -1,6 +1,38 @@
 symbol,yahoo_symbol,name,reason,avg_dollar_volume_30d_usd,valid_days
-BATRA,BATRA,"Atlanta Braves Holdings, Inc. - Series A Common Stock",avg_dollar_volume_30d_below_15m_usd,3501660.15,43
+AD,AD,"Array Digital Infrastructure, Inc. Common Shares",avg_dollar_volume_30d_below_15m_usd,7709359.6,40
+AKO.A,AKO-A,Embotelladora Andina S.A. Common Stock,avg_dollar_volume_30d_below_15m_usd,13476.07,40
+AKO.B,AKO-B,Embotelladora Andina S.A. Common Stock,avg_dollar_volume_30d_below_15m_usd,156202.2,41
+ALH,ALH,Alliance Laundry Holdings Inc. Common Stock,avg_dollar_volume_30d_below_15m_usd,14287389.81,40
+BATRA,BATRA,"Atlanta Braves Holdings, Inc. - Series A Common Stock",avg_dollar_volume_30d_below_15m_usd,3515508.79,40
+BBUC,BBUC,Brookfield Business Corporation Class A Subordinate Voting Shares,avg_dollar_volume_30d_below_15m_usd,9980565.29,40
+BF.A,BF-A,Brown Forman Inc Class A Common Stock,avg_dollar_volume_30d_below_15m_usd,3713767.5,40
+BIO.B,BIO-B,"Bio-Rad Laboratories, Inc. Class B  Common Stock",avg_dollar_volume_30d_below_15m_usd,6083.27,40
+BLCO,BLCO,Bausch + Lomb Corporation Common Shares,avg_dollar_volume_30d_below_15m_usd,6681532.96,40
+BNT,BNT,Brookfield Wealth Solutions Ltd. Class A Exchangeable Limited Voting Shares,avg_dollar_volume_30d_below_15m_usd,849758.93,40
+BWLP,BWLP,BW LPG Limited Common Shares,avg_dollar_volume_30d_below_15m_usd,6783995.83,40
+CAAP,CAAP,Corporacion America Airports SA Common Shares,avg_dollar_volume_30d_below_15m_usd,4770715.61,40
 CHRN,CHRN,ChronoScale Holdings Corporation - Common Stock,avg_dollar_volume_30d_below_15m_usd,6111422.17,43
+CMBT,CMBT,CMB.TECH NV Ordinary Shares,avg_dollar_volume_30d_below_15m_usd,13656351.94,43
 CRVL,CRVL,CorVel Corp. - Common Stock,avg_dollar_volume_30d_below_15m_usd,10809844.29,43
-DOO,DOO,BRP Inc. - Common Subordinate Voting Shares,avg_dollar_volume_30d_below_15m_usd,12414698.37,43
-FWONA,FWONA,Liberty Media Corporation - Series A Liberty Formula One Common Stock,avg_dollar_volume_30d_below_15m_usd,14834888.71,43
+DOO,DOO,BRP Inc. - Common Subordinate Voting Shares,avg_dollar_volume_30d_below_15m_usd,12267361.77,40
+EE,EE,"Excelerate Energy, Inc. Class A Common Stock",avg_dollar_volume_30d_below_15m_usd,11342045.73,43
+EROK,EROK,"EagleRock Land, LLC Class A shares representing limited liability company interests",avg_dollar_volume_30d_below_15m_usd,4113547.25,43
+KYIV,KYIV,Kyivstar Group Ltd. - Common Shares,avg_dollar_volume_30d_below_15m_usd,8039526.69,41
+LBRDA,LBRDA,Liberty Broadband Corporation - Class A Common Stock,avg_dollar_volume_30d_below_15m_usd,6984998.27,43
+MAAS,MAAS,Maase Inc. - Class A Ordinary Shares,avg_dollar_volume_30d_below_15m_usd,2393750.69,43
+MCHB,MCHB,Mechanics Bancorp - Class A Common Stock,avg_dollar_volume_30d_below_15m_usd,9981446.32,40
+MOG.B,MOG-B,Moog Inc. Class B Common Stock,avg_dollar_volume_30d_below_15m_usd,49255.63,40
+OGC,OGC,OceanaGold Corporation Common Shares,avg_dollar_volume_30d_below_15m_usd,10846580.81,40
+PBLS,PBLS,"Parabilis Medicines, Inc. - Common Stock",avg_dollar_volume_30d_below_15m_usd,13256257.26,40
+PINC,PINC,PGIM Securitized Income ETF,avg_dollar_volume_30d_below_15m_usd,13326.43,40
+PLSE,PLSE,"Pulse Biosciences, Inc - Common Stock",avg_dollar_volume_30d_below_15m_usd,13056647.94,40
+PS,PS,Pershing Square Inc. Common Stock,avg_dollar_volume_30d_below_15m_usd,5400193.27,40
+PSO,PSO,"Pearson, Plc Common Stock",avg_dollar_volume_30d_below_15m_usd,13865679.56,40
+RUSHB,RUSHB,"Rush Enterprises, Inc. - Class B Common Stock",avg_dollar_volume_30d_below_15m_usd,7926328.49,38
+STVN,STVN,Stevanato Group S.p.A. Ordinary Shares,avg_dollar_volume_30d_below_15m_usd,7822622.36,40
+TAP.A,TAP-A,Molson Coors Beverage Company Class A Common Stock,avg_dollar_volume_30d_below_15m_usd,5388.2,40
+TGS,TGS,Transportadora de Gas del Sur SA TGS Common Stock,avg_dollar_volume_30d_below_15m_usd,6661376.5,40
+TR,TR,"Tootsie Roll Industries, Inc. Common Stock",avg_dollar_volume_30d_below_15m_usd,6863509.6,40
+UHAL,UHAL,U-Haul Holding Company Common Stock,avg_dollar_volume_30d_below_15m_usd,12835172.05,40
+WFG,WFG,West Fraser Timber Co. Ltd Common stock,avg_dollar_volume_30d_below_15m_usd,14061949.81,40
+WSO.B,WSO-B,"Watsco, Inc. Class B Common Stock",avg_dollar_volume_30d_below_15m_usd,28960.57,40
