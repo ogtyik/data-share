@@ -364,8 +364,10 @@ def run_shard(args) -> dict:
     # ---- 第一步：市值与股价过滤 ----
     filter_log = workspace_dir / f'filter_shard_{shard_index:02d}.log'
     df = filter_by_market_cap_and_price_shard(df, filter_log)
+    kept_symbols = df['Symbol'].tolist() if not df.empty else []   # 新增
+
     if df.empty:
-        # 该分片无股票通过市值/股价过滤，直接返回空结果
+        # 该分片无股票通过市值/股价过滤，返回空结果，但也要记录 kept_symbols（空）
         payload = {
             'status': 'completed',
             'generated_at_utc': now_utc().isoformat(),
@@ -377,6 +379,7 @@ def run_shard(args) -> dict:
             'smallcap_symbols': [],
             'missing_symbols': [],
             'rows': [],
+            'kept_symbols': kept_symbols,      # 新增
             'stderr_file': str(filter_log.relative_to(workspace_dir)),
         }
         results_dir = workspace_dir / 'results'
@@ -410,6 +413,7 @@ def run_shard(args) -> dict:
         'smallcap_symbols': smallcap_symbols,
         'missing_symbols': missing_symbols,
         'rows': rows,
+        'kept_symbols': kept_symbols,      # 新增
         'stderr_file': str(stderr_path.relative_to(workspace_dir)),
         'filter_log': str(filter_log.relative_to(workspace_dir)),
     }
@@ -486,6 +490,7 @@ def run_aggregate(args) -> dict:
     generated_symbols: set[str] = set()
     smallcap_symbols: set[str] = set()
     missing_symbols: set[str] = set()
+    all_kept_symbols: set[str] = set()      # 新增：收集所有通过市值/股价过滤的符号
     shards_summary = []
     for shard_file in shard_files:
         payload = json.loads(shard_file.read_text(encoding='utf-8'))
@@ -493,6 +498,8 @@ def run_aggregate(args) -> dict:
         generated_symbols.update(payload.get('generated_symbols', []) or [])
         smallcap_symbols.update(payload.get('smallcap_symbols', []) or [])
         missing_symbols.update(payload.get('missing_symbols', []) or [])
+        kept = payload.get('kept_symbols', [])
+        all_kept_symbols.update(kept)        # 收集
         shards_summary.append({
             'shard_index': int(payload.get('shard_index', 0)),
             'symbols': int(payload.get('symbols', 0)),
@@ -510,6 +517,15 @@ def run_aggregate(args) -> dict:
     other_text = (source_dir / 'otherlisted.txt').read_text(encoding='utf-8')
     us_symbols_csv_workspace = source_dir / 'us_symbols.csv'
 
+    # ---- 新增：使用 all_kept_symbols 过滤 us_symbols.csv ----
+    initial_df = pd.read_csv(us_symbols_csv_workspace)
+    filtered_df = initial_df[initial_df['Symbol'].isin(all_kept_symbols)]
+    # 覆盖原文件
+    filtered_df.to_csv(us_symbols_csv_workspace, index=False, encoding='utf-8')
+    # ------------------------------------------------
+
+    filtered_symbol_count = len(filtered_df)
+
     (out_dir / 'nasdaqlisted.txt').write_text(nasdaq_text, encoding='utf-8')
     (out_dir / 'otherlisted.txt').write_text(other_text, encoding='utf-8')
     us_symbols_csv = out_dir / 'us_symbols.csv'
@@ -525,7 +541,7 @@ def run_aggregate(args) -> dict:
             'min_price_usd': MIN_PRICE_USD,
         },
         'counts': {
-            'symbols': int(pd.read_csv(us_symbols_csv).shape[0]),
+            'symbols': filtered_symbol_count,      # 修改
             'smallcap_symbols': int(len(smallcap_symbols_sorted)),
             'missing_symbols': int(len(missing_symbols_sorted)),
             'generated_symbols': int(len(generated_symbols_sorted)),
