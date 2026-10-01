@@ -1,29 +1,10 @@
 symbol,yahoo_symbol,name,reason,avg_dollar_volume_30d_usd,valid_days
-BATRA,BATRA,"Atlanta Braves Holdings, Inc. - Series A Common Stock",avg_dollar_volume_30d_below_15m_usd,3501660.15,43
-CHRN,CHRN,ChronoScale Holdings Corporation - Common Stock,avg_dollar_volume_30d_below_15m_usd,6111422.17,43
-CMBT,CMBT,CMB.TECH NV Ordinary Shares,avg_dollar_volume_30d_below_15m_usd,14528842.65,40
-CRVL,CRVL,CorVel Corp. - Common Stock,avg_dollar_volume_30d_below_15m_usd,10809844.29,43
-DOO,DOO,BRP Inc. - Common Subordinate Voting Shares,avg_dollar_volume_30d_below_15m_usd,12267361.77,40
-EE,EE,"Excelerate Energy, Inc. Class A Common Stock",avg_dollar_volume_30d_below_15m_usd,11583694.66,40
-EROK,EROK,"EagleRock Land, LLC Class A shares representing limited liability company interests",avg_dollar_volume_30d_below_15m_usd,4687001.04,40
-GEF.B,GEF-B,"Greif, Inc. Corporation Class B Common Stock",avg_dollar_volume_30d_below_15m_usd,6413375.4,40
-HGTY,HGTY,"Hagerty, Inc. Class A Common Stock",avg_dollar_volume_30d_below_15m_usd,1955789.77,40
-IFS,IFS,Intercorp Financial Services Inc. Common Shares,avg_dollar_volume_30d_below_15m_usd,13354236.72,40
-JOE,JOE,St. Joe Company (The) Common Stock,avg_dollar_volume_30d_below_15m_usd,14692764.38,40
-LEN.B,LEN-B,Lennar Corporation Class B,avg_dollar_volume_30d_below_15m_usd,6054643.32,40
-MOG.B,MOG-B,Moog Inc. Class B Common Stock,avg_dollar_volume_30d_below_15m_usd,43377.43,43
-OGC,OGC,OceanaGold Corporation Common Shares,avg_dollar_volume_30d_below_15m_usd,10846580.81,40
-PBLS,PBLS,"Parabilis Medicines, Inc. - Common Stock",avg_dollar_volume_30d_below_15m_usd,12933111.91,43
-PINC,PINC,PGIM Securitized Income ETF,avg_dollar_volume_30d_below_15m_usd,13326.43,40
-PLSE,PLSE,"Pulse Biosciences, Inc - Common Stock",avg_dollar_volume_30d_below_15m_usd,13056647.94,40
-PS,PS,Pershing Square Inc. Common Stock,avg_dollar_volume_30d_below_15m_usd,5400193.27,40
-PSO,PSO,"Pearson, Plc Common Stock",avg_dollar_volume_30d_below_15m_usd,13865679.56,40
-RUSHB,RUSHB,"Rush Enterprises, Inc. - Class B Common Stock",avg_dollar_volume_30d_below_15m_usd,7926328.49,38
-STVN,STVN,Stevanato Group S.p.A. Ordinary Shares,avg_dollar_volume_30d_below_15m_usd,7822622.36,40
-TAP.A,TAP-A,Molson Coors Beverage Company Class A Common Stock,avg_dollar_volume_30d_below_15m_usd,5388.2,40
-TGS,TGS,Transportadora de Gas del Sur SA TGS Common Stock,avg_dollar_volume_30d_below_15m_usd,6661376.5,40
-TR,TR,"Tootsie Roll Industries, Inc. Common Stock",avg_dollar_volume_30d_below_15m_usd,6428738.2,43
-TRMD,TRMD,TORM plc - Class A Common Stock,avg_dollar_volume_30d_below_15m_usd,13983945.67,43
-UHAL,UHAL,U-Haul Holding Company Common Stock,avg_dollar_volume_30d_below_15m_usd,12462492.02,43
-WSE,WSE,Wise Group plc - Class A Ordinary Shares,avg_dollar_volume_30d_below_15m_usd,13987257.98,43
-WSO.B,WSO-B,"Watsco, Inc. Class B Common Stock",avg_dollar_volume_30d_below_15m_usd,28960.57,40
+BANF,BANF,BancFirst Corporation - Common Stock,avg_dollar_volume_30d_below_15m_usd,14920125.12,42
+BATRA,BATRA,"Atlanta Braves Holdings, Inc. - Series A Common Stock",avg_dollar_volume_30d_below_15m_usd,3908358.68,42
+CRVL,CRVL,CorVel Corp. - Common Stock,avg_dollar_volume_30d_below_15m_usd,14123870.63,42
+ENLT,ENLT,Enlight Renewable Energy Ltd. - Ordinary Shares,avg_dollar_volume_30d_below_15m_usd,13868966.03,42
+GEF.B,GEF-B,"Greif, Inc. Corporation Class B Common Stock",avg_dollar_volume_30d_below_15m_usd,9692704.57,42
+PINC,PINC,PGIM Securitized Income ETF,avg_dollar_volume_30d_below_15m_usd,108033.4,42
+PSO,PSO,"Pearson, Plc Common Stock",avg_dollar_volume_30d_below_15m_usd,9867170.54,42
+RUSHB,RUSHB,"Rush Enterprises, Inc. - Class B Common Stock",avg_dollar_volume_30d_below_15m_usd,9946606.01,42
+TFSL,TFSL,TFS Financial Corporation - Common Stock,avg_dollar_volume_30d_below_15m_usd,12874064.63,42

@@ -1,5 +1,5 @@
 {
-  "updated_at_utc": "2026-08-16T16:53:26.091873+00:00",
+  "updated_at_utc": "2026-10-01T08:28:35.130396+00:00",
   "sources": {
     "nasdaqlisted": "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
     "otherlisted": "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
@@ -12,9 +12,9 @@
     "price_threshold_usd": 12.0
   },
   "counts": {
-    "symbols": 1130,
-    "generated_exclusions": 28,
-    "smallcap_symbols": 28,
+    "symbols": 767,
+    "generated_exclusions": 9,
+    "smallcap_symbols": 9,
     "missing_symbols": 0
   },
   "updater": {
@@ -25,54 +25,54 @@
     "shards": [
       {
         "shard_index": 1,
-        "symbols": 170,
+        "symbols": 206,
         "generated_symbols": 4,
         "missing_symbols": 0
       },
       {
         "shard_index": 2,
-        "symbols": 215,
-        "generated_symbols": 5,
+        "symbols": 189,
+        "generated_symbols": 2,
         "missing_symbols": 0
       },
       {
         "shard_index": 3,
-        "symbols": 368,
-        "generated_symbols": 8,
+        "symbols": 190,
+        "generated_symbols": 1,
         "missing_symbols": 0
       },
       {
         "shard_index": 4,
-        "symbols": 377,
-        "generated_symbols": 11,
+        "symbols": 182,
+        "generated_symbols": 2,
         "missing_symbols": 0
       }
     ]
   },
   "files": {
     "nasdaqlisted.txt": {
-      "sha256": "b46d13a7fe9c68189215022570ff46777b65b10cb137c29dcc430bc264fa887d",
-      "bytes": 341534
+      "sha256": "5030cbf242c58f96d15b8d999f81e144124167c447967a1b9d9aaa188502ed84",
+      "bytes": 344299
     },
     "otherlisted.txt": {
-      "sha256": "22a539b2f982751a37a5de6efbacb9464949512ab4d352dc0968b9e46278d2d2",
-      "bytes": 528083
+      "sha256": "9d5d5191fc116e426ea87e0a13fcf7a7204b80be25814b20916cb827abf41ca2",
+      "bytes": 535246
     },
     "us_symbols.csv": {
-      "sha256": "0a4ba21abd097730a9c7081e4983fc4f1f90afb65ff2bb8a5f821eb62756c11d",
-      "bytes": 74446
+      "sha256": "75f3dd4d99f694ee57e659f4bc41cba37072b3030a86325ed9da1a41ec1d1360",
+      "bytes": 50864
     },
     "monthly_excluded_symbols.json": {
-      "sha256": "9f7fc9af7f6c85270241c441500fc136ea24e2c090f725d8d81ed3d194f39ab3",
-      "bytes": 8135
+      "sha256": "2db4653ac0a0628e070783e60cfaa188f95b6bd82bbe0b85be0bcec8365e8fa6",
+      "bytes": 2964
     },
     "monthly_excluded_symbols.csv": {
-      "sha256": "06a194a1383550d809b7736a99797635f0f18d434a49887e852cf5525f98c830",
-      "bytes": 2887
+      "sha256": "6208413ebe38b4d0496e4b9dd21a32be223faa69054df1e29f4ce8bf420346ed",
+      "bytes": 976
     },
     "monthly_excluded_symbols.txt": {
-      "sha256": "f69d039937cf8bcf53ff54dc501b24d29e71b93839a578e3b6f843c6e9cccbcf",
-      "bytes": 134
+      "sha256": "87281d00c7509fd48e374484488a3f238d39c8e1ca7dca08ab3f5f865c4e66de",
+      "bytes": 47
     }
   }
 }
