@@ -1,5 +1,5 @@
 {
-  "updated_at_utc": "2026-10-01T08:28:35.127896+00:00",
+  "updated_at_utc": "2026-11-01T08:58:39.405988+00:00",
   "thresholds": {
     "smallcap_avg_dollar_volume_30d_usd": 15000000,
     "market_data_period": "2mo",
@@ -8,29 +8,51 @@
     "min_price_usd": 12.0
   },
   "counts": {
-    "symbols": 767,
-    "smallcap_symbols": 9,
+    "symbols": 957,
+    "smallcap_symbols": 20,
     "missing_symbols": 0,
-    "generated_symbols": 9,
+    "generated_symbols": 20,
     "manual_exclusions": 0
   },
   "generated_symbols": [
-    "BANF",
+    "AKO.A",
+    "AKO.B",
     "BATRA",
+    "BBUC",
+    "BF.A",
+    "BIO.B",
+    "BLCO",
+    "BNT",
+    "BWLP",
+    "CAAP",
     "CRVL",
+    "DOO",
+    "EE",
     "ENLT",
-    "GEF.B",
+    "FIZZ",
+    "OGC",
     "PINC",
     "PSO",
     "RUSHB",
     "TFSL"
   ],
   "smallcap_symbols": [
-    "BANF",
+    "AKO.A",
+    "AKO.B",
     "BATRA",
+    "BBUC",
+    "BF.A",
+    "BIO.B",
+    "BLCO",
+    "BNT",
+    "BWLP",
+    "CAAP",
     "CRVL",
+    "DOO",
+    "EE",
     "ENLT",
-    "GEF.B",
+    "FIZZ",
+    "OGC",
     "PINC",
     "PSO",
     "RUSHB",
@@ -39,76 +61,164 @@
   "missing_symbols": [],
   "rows": [
     {
-      "symbol": "BANF",
-      "yahoo_symbol": "BANF",
-      "name": "BancFirst Corporation - Common Stock",
+      "symbol": "AKO.A",
+      "yahoo_symbol": "AKO-A",
+      "name": "Embotelladora Andina S.A. Common Stock",
       "reason": "avg_dollar_volume_30d_below_15m_usd",
-      "avg_dollar_volume_30d_usd": 14920125.12,
-      "valid_days": 42
+      "avg_dollar_volume_30d_usd": 6269.53,
+      "valid_days": 44
+    },
+    {
+      "symbol": "AKO.B",
+      "yahoo_symbol": "AKO-B",
+      "name": "Embotelladora Andina S.A. Common Stock",
+      "reason": "avg_dollar_volume_30d_below_15m_usd",
+      "avg_dollar_volume_30d_usd": 162698.37,
+      "valid_days": 44
     },
     {
       "symbol": "BATRA",
       "yahoo_symbol": "BATRA",
       "name": "Atlanta Braves Holdings, Inc. - Series A Common Stock",
       "reason": "avg_dollar_volume_30d_below_15m_usd",
-      "avg_dollar_volume_30d_usd": 3908358.68,
-      "valid_days": 42
+      "avg_dollar_volume_30d_usd": 2631172.37,
+      "valid_days": 44
+    },
+    {
+      "symbol": "BBUC",
+      "yahoo_symbol": "BBUC",
+      "name": "Brookfield Business Corporation Class A Subordinate Voting Shares",
+      "reason": "avg_dollar_volume_30d_below_15m_usd",
+      "avg_dollar_volume_30d_usd": 8323714.44,
+      "valid_days": 44
+    },
+    {
+      "symbol": "BF.A",
+      "yahoo_symbol": "BF-A",
+      "name": "Brown Forman Inc Class A Common Stock",
+      "reason": "avg_dollar_volume_30d_below_15m_usd",
+      "avg_dollar_volume_30d_usd": 3748289.03,
+      "valid_days": 44
+    },
+    {
+      "symbol": "BIO.B",
+      "yahoo_symbol": "BIO-B",
+      "name": "Bio-Rad Laboratories, Inc. Class B  Common Stock",
+      "reason": "avg_dollar_volume_30d_below_15m_usd",
+      "avg_dollar_volume_30d_usd": 4957.67,
+      "valid_days": 44
+    },
+    {
+      "symbol": "BLCO",
+      "yahoo_symbol": "BLCO",
+      "name": "Bausch + Lomb Corporation Common Shares",
+      "reason": "avg_dollar_volume_30d_below_15m_usd",
+      "avg_dollar_volume_30d_usd": 13657537.68,
+      "valid_days": 44
+    },
+    {
+      "symbol": "BNT",
+      "yahoo_symbol": "BNT",
+      "name": "Brookfield Wealth Solutions Ltd. Class A Exchangeable Limited Voting Shares",
+      "reason": "avg_dollar_volume_30d_below_15m_usd",
+      "avg_dollar_volume_30d_usd": 508851.67,
+      "valid_days": 44
+    },
+    {
+      "symbol": "BWLP",
+      "yahoo_symbol": "BWLP",
+      "name": "BW LPG Limited Common Shares",
+      "reason": "avg_dollar_volume_30d_below_15m_usd",
+      "avg_dollar_volume_30d_usd": 10426656.0,
+      "valid_days": 44
+    },
+    {
+      "symbol": "CAAP",
+      "yahoo_symbol": "CAAP",
+      "name": "Corporacion America Airports SA Common Shares",
+      "reason": "avg_dollar_volume_30d_below_15m_usd",
+      "avg_dollar_volume_30d_usd": 8268965.14,
+      "valid_days": 44
     },
     {
       "symbol": "CRVL",
       "yahoo_symbol": "CRVL",
       "name": "CorVel Corp. - Common Stock",
       "reason": "avg_dollar_volume_30d_below_15m_usd",
-      "avg_dollar_volume_30d_usd": 14123870.63,
-      "valid_days": 42
+      "avg_dollar_volume_30d_usd": 13563907.42,
+      "valid_days": 44
+    },
+    {
+      "symbol": "DOO",
+      "yahoo_symbol": "DOO",
+      "name": "BRP Inc. - Common Subordinate Voting Shares",
+      "reason": "avg_dollar_volume_30d_below_15m_usd",
+      "avg_dollar_volume_30d_usd": 12969316.18,
+      "valid_days": 44
+    },
+    {
+      "symbol": "EE",
+      "yahoo_symbol": "EE",
+      "name": "Excelerate Energy, Inc. Class A Common Stock",
+      "reason": "avg_dollar_volume_30d_below_15m_usd",
+      "avg_dollar_volume_30d_usd": 12396364.51,
+      "valid_days": 44
     },
     {
       "symbol": "ENLT",
       "yahoo_symbol": "ENLT",
       "name": "Enlight Renewable Energy Ltd. - Ordinary Shares",
       "reason": "avg_dollar_volume_30d_below_15m_usd",
-      "avg_dollar_volume_30d_usd": 13868966.03,
-      "valid_days": 42
+      "avg_dollar_volume_30d_usd": 12851894.1,
+      "valid_days": 44
     },
     {
-      "symbol": "GEF.B",
-      "yahoo_symbol": "GEF-B",
-      "name": "Greif, Inc. Corporation Class B Common Stock",
+      "symbol": "FIZZ",
+      "yahoo_symbol": "FIZZ",
+      "name": "National Beverage Corp. - Common Stock",
       "reason": "avg_dollar_volume_30d_below_15m_usd",
-      "avg_dollar_volume_30d_usd": 9692704.57,
-      "valid_days": 42
+      "avg_dollar_volume_30d_usd": 11919804.82,
+      "valid_days": 44
+    },
+    {
+      "symbol": "OGC",
+      "yahoo_symbol": "OGC",
+      "name": "OceanaGold Corporation Common Shares",
+      "reason": "avg_dollar_volume_30d_below_15m_usd",
+      "avg_dollar_volume_30d_usd": 14691954.43,
+      "valid_days": 44
     },
     {
       "symbol": "PINC",
       "yahoo_symbol": "PINC",
       "name": "PGIM Securitized Income ETF",
       "reason": "avg_dollar_volume_30d_below_15m_usd",
-      "avg_dollar_volume_30d_usd": 108033.4,
-      "valid_days": 42
+      "avg_dollar_volume_30d_usd": 28865.3,
+      "valid_days": 44
     },
     {
       "symbol": "PSO",
       "yahoo_symbol": "PSO",
       "name": "Pearson, Plc Common Stock",
       "reason": "avg_dollar_volume_30d_below_15m_usd",
-      "avg_dollar_volume_30d_usd": 9867170.54,
-      "valid_days": 42
+      "avg_dollar_volume_30d_usd": 12123167.78,
+      "valid_days": 44
     },
     {
       "symbol": "RUSHB",
       "yahoo_symbol": "RUSHB",
       "name": "Rush Enterprises, Inc. - Class B Common Stock",
       "reason": "avg_dollar_volume_30d_below_15m_usd",
-      "avg_dollar_volume_30d_usd": 9946606.01,
-      "valid_days": 42
+      "avg_dollar_volume_30d_usd": 5515290.94,
+      "valid_days": 44
     },
     {
       "symbol": "TFSL",
       "yahoo_symbol": "TFSL",
       "name": "TFS Financial Corporation - Common Stock",
       "reason": "avg_dollar_volume_30d_below_15m_usd",
-      "avg_dollar_volume_30d_usd": 12874064.63,
-      "valid_days": 42
+      "avg_dollar_volume_30d_usd": 11816364.45,
+      "valid_days": 44
     }
   ]
 }

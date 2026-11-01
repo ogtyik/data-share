@@ -1,10 +1,21 @@
 symbol,yahoo_symbol,name,reason,avg_dollar_volume_30d_usd,valid_days
-BANF,BANF,BancFirst Corporation - Common Stock,avg_dollar_volume_30d_below_15m_usd,14920125.12,42
-BATRA,BATRA,"Atlanta Braves Holdings, Inc. - Series A Common Stock",avg_dollar_volume_30d_below_15m_usd,3908358.68,42
-CRVL,CRVL,CorVel Corp. - Common Stock,avg_dollar_volume_30d_below_15m_usd,14123870.63,42
-ENLT,ENLT,Enlight Renewable Energy Ltd. - Ordinary Shares,avg_dollar_volume_30d_below_15m_usd,13868966.03,42
-GEF.B,GEF-B,"Greif, Inc. Corporation Class B Common Stock",avg_dollar_volume_30d_below_15m_usd,9692704.57,42
-PINC,PINC,PGIM Securitized Income ETF,avg_dollar_volume_30d_below_15m_usd,108033.4,42
-PSO,PSO,"Pearson, Plc Common Stock",avg_dollar_volume_30d_below_15m_usd,9867170.54,42
-RUSHB,RUSHB,"Rush Enterprises, Inc. - Class B Common Stock",avg_dollar_volume_30d_below_15m_usd,9946606.01,42
-TFSL,TFSL,TFS Financial Corporation - Common Stock,avg_dollar_volume_30d_below_15m_usd,12874064.63,42
+AKO.A,AKO-A,Embotelladora Andina S.A. Common Stock,avg_dollar_volume_30d_below_15m_usd,6269.53,44
+AKO.B,AKO-B,Embotelladora Andina S.A. Common Stock,avg_dollar_volume_30d_below_15m_usd,162698.37,44
+BATRA,BATRA,"Atlanta Braves Holdings, Inc. - Series A Common Stock",avg_dollar_volume_30d_below_15m_usd,2631172.37,44
+BBUC,BBUC,Brookfield Business Corporation Class A Subordinate Voting Shares,avg_dollar_volume_30d_below_15m_usd,8323714.44,44
+BF.A,BF-A,Brown Forman Inc Class A Common Stock,avg_dollar_volume_30d_below_15m_usd,3748289.03,44
+BIO.B,BIO-B,"Bio-Rad Laboratories, Inc. Class B  Common Stock",avg_dollar_volume_30d_below_15m_usd,4957.67,44
+BLCO,BLCO,Bausch + Lomb Corporation Common Shares,avg_dollar_volume_30d_below_15m_usd,13657537.68,44
+BNT,BNT,Brookfield Wealth Solutions Ltd. Class A Exchangeable Limited Voting Shares,avg_dollar_volume_30d_below_15m_usd,508851.67,44
+BWLP,BWLP,BW LPG Limited Common Shares,avg_dollar_volume_30d_below_15m_usd,10426656.0,44
+CAAP,CAAP,Corporacion America Airports SA Common Shares,avg_dollar_volume_30d_below_15m_usd,8268965.14,44
+CRVL,CRVL,CorVel Corp. - Common Stock,avg_dollar_volume_30d_below_15m_usd,13563907.42,44
+DOO,DOO,BRP Inc. - Common Subordinate Voting Shares,avg_dollar_volume_30d_below_15m_usd,12969316.18,44
+EE,EE,"Excelerate Energy, Inc. Class A Common Stock",avg_dollar_volume_30d_below_15m_usd,12396364.51,44
+ENLT,ENLT,Enlight Renewable Energy Ltd. - Ordinary Shares,avg_dollar_volume_30d_below_15m_usd,12851894.1,44
+FIZZ,FIZZ,National Beverage Corp. - Common Stock,avg_dollar_volume_30d_below_15m_usd,11919804.82,44
+OGC,OGC,OceanaGold Corporation Common Shares,avg_dollar_volume_30d_below_15m_usd,14691954.43,44
+PINC,PINC,PGIM Securitized Income ETF,avg_dollar_volume_30d_below_15m_usd,28865.3,44
+PSO,PSO,"Pearson, Plc Common Stock",avg_dollar_volume_30d_below_15m_usd,12123167.78,44
+RUSHB,RUSHB,"Rush Enterprises, Inc. - Class B Common Stock",avg_dollar_volume_30d_below_15m_usd,5515290.94,44
+TFSL,TFSL,TFS Financial Corporation - Common Stock,avg_dollar_volume_30d_below_15m_usd,11816364.45,44
